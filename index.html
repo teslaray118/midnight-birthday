@@ -2,137 +2,806 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#080b20">
-<title>My Birthday Countdown ✨</title>
-<style>
-*{box-sizing:border-box}
-body{
-  margin:0;min-height:100vh;overflow-x:hidden;
-  background:radial-gradient(ellipse at 50% 40%,#21154d 0%,#10132e 42%,#050714 100%);
-  color:#f7f3ff;font-family:system-ui,-apple-system,sans-serif;
-  display:grid;place-items:center;text-align:center;padding:25px;
-}
-#stars{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
-main{position:relative;width:min(760px,100%);padding:30px 0}
-.eyebrow{color:#c4b5fd;letter-spacing:4px;font-size:12px;font-weight:700}
-h1{font-size:clamp(34px,7vw,68px);line-height:1.08;margin:22px 0 14px;
-background:linear-gradient(100deg,#fff,#c4b5fd,#a5b4fc);
--webkit-background-clip:text;background-clip:text;color:transparent;
-text-shadow:0 0 35px #8b5cf644}
-.subtitle{color:#cbd0f8;line-height:1.7}
-.moon{font-size:64px;margin:22px 0;filter:drop-shadow(0 0 25px #a78bfa)}
-.countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:32px 0}
-.unit{padding:20px 5px;background:#ffffff0b;border:1px solid #a78bfa55;
-border-radius:17px;box-shadow:0 0 25px #8b5cf414;backdrop-filter:blur(10px)}
-.number{font-size:clamp(27px,6vw,49px);font-weight:750;color:#e9d5ff;
-font-variant-numeric:tabular-nums}
-.label{font-size:10px;letter-spacing:2px;color:#b8b9e6;margin-top:7px}
-.date{color:#ddd6fe;font-weight:650;letter-spacing:2px}
-.message{margin:25px 0;color:#c4b5fd;line-height:1.8}
-button{background:linear-gradient(100deg,#7c3aed,#6366f1);color:white;
-border:0;border-radius:999px;padding:13px 23px;font-weight:650;
-cursor:pointer;box-shadow:0 0 25px #8b5cf444}
-button:focus-visible{outline:2px solid white;outline-offset:4px}
-footer{color:#888bb8;font-size:12px;margin-top:35px}
-@media(max-width:420px){.countdown{gap:7px}.unit{padding:15px 2px}.label{letter-spacing:1px}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08091f">
+  <meta name="description" content="The official Ray's Birthday Countdown. A little magic before the big day.">
+  <meta property="og:title" content="Ray's Birthday Countdown ✨">
+  <meta property="og:description" content="The countdown is on! Join Ray's birthday universe. 🌌💜">
+  <title>Ray's Birthday Countdown ✨</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #08091f;
+      --purple: #a78bfa;
+      --pink: #f0abfc;
+      --blue: #7dd3fc;
+      --white: #f7f4ff;
+      --muted: #b9b5d3;
+      --glass: rgba(255,255,255,.055);
+      --border: rgba(211,192,255,.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--white);
+      background:
+        radial-gradient(ellipse at 15% 15%, rgba(88,48,180,.25), transparent 42%),
+        radial-gradient(ellipse at 85% 65%, rgba(57,62,165,.2), transparent 38%),
+        linear-gradient(145deg, #070817 0%, #11102e 48%, #08091f 100%);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    button { font: inherit; }
+
+    #starfield {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .aurora {
+      position: fixed;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: .18;
+      pointer-events: none;
+      z-index: 0;
+      animation: aurora 12s ease-in-out infinite alternate;
+    }
+
+    .aurora.one { background: #7c3aed; top: -140px; left: -100px; }
+    .aurora.two { background: #2563eb; right: -140px; bottom: -120px; animation-delay: -5s; }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: min(100% - 32px, 960px);
+      margin: auto;
+      padding: 28px 0 30px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      animation: fadeDown .8s ease both;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      letter-spacing: .3px;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: var(--glass);
+      box-shadow: 0 0 24px rgba(167,139,250,.12);
+    }
+
+    .live-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 9px 13px;
+      background: rgba(255,255,255,.035);
+      color: #e9e1ff;
+      font-size: 11px;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #c4b5fd;
+      box-shadow: 0 0 12px #a78bfa;
+      animation: pulse 1.8s infinite;
+    }
+
+    main { text-align: center; }
+
+    .hero {
+      padding: clamp(48px, 9vh, 90px) 0 28px;
+      animation: fadeUp 1s .1s ease both;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(196,181,253,.25);
+      background: rgba(167,139,250,.08);
+      color: #ddd2ff;
+      border-radius: 99px;
+      padding: 9px 15px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow span { animation: twinkle 2s infinite; }
+
+    h1 {
+      margin: 25px 0 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(43px, 8.7vw, 91px);
+      line-height: .99;
+      letter-spacing: -4px;
+      font-weight: 700;
+    }
+
+    .title-white { display: block; }
+
+    .title-gradient {
+      display: block;
+      padding: 5px 0 12px;
+      color: transparent;
+      background: linear-gradient(100deg, #c4b5fd 5%, #f0abfc 45%, #93c5fd 85%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      filter: drop-shadow(0 0 28px rgba(192,132,252,.2));
+    }
+
+    .subtitle {
+      max-width: 520px;
+      margin: 22px auto 0;
+      color: var(--muted);
+      font-size: clamp(14px, 2.3vw, 17px);
+      line-height: 1.8;
+    }
+
+    .birthday-date {
+      margin-top: 17px;
+      color: #e7dfff;
+      font-size: 13px;
+      letter-spacing: 1.6px;
+    }
+
+    .birthday-date strong { color: #f0abfc; }
+
+    .orbit {
+      width: 108px;
+      height: 108px;
+      position: relative;
+      margin: 30px auto 22px;
+      display: grid;
+      place-items: center;
+    }
+
+    .orbit-ring {
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(196,181,253,.35);
+      border-radius: 50%;
+      box-shadow: inset 0 0 22px rgba(167,139,250,.08), 0 0 26px rgba(167,139,250,.08);
+      animation: spin 14s linear infinite;
+    }
+
+    .orbit-ring::before {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      left: 12px;
+      top: 15px;
+      border-radius: 50%;
+      background: #f0abfc;
+      box-shadow: 0 0 15px #f0abfc;
+    }
+
+    .orbit-ring.inner {
+      inset: 12px;
+      border-style: dashed;
+      animation-direction: reverse;
+      animation-duration: 20s;
+    }
+
+    .orbit-core {
+      font-size: 38px;
+      filter: drop-shadow(0 0 18px rgba(240,171,252,.65));
+      animation: heartFloat 3s ease-in-out infinite;
+    }
+
+    .section-label {
+      margin: 14px 0 20px;
+      color: #bdb5e0;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 13px;
+      animation: fadeUp .9s .3s ease both;
+    }
+
+    .time-card {
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+      padding: 25px 8px 20px;
+      border: 1px solid var(--border);
+      border-radius: 21px;
+      background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.018));
+      box-shadow: 0 12px 45px rgba(0,0,0,.16), inset 0 1px rgba(255,255,255,.07);
+      backdrop-filter: blur(18px);
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+    }
+
+    .time-card::before {
+      content: "";
+      position: absolute;
+      height: 1px;
+      top: 0;
+      left: 20%;
+      right: 20%;
+      background: linear-gradient(90deg, transparent, #c4b5fd, transparent);
+      opacity: .7;
+    }
+
+    .time-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(216,180,254,.5);
+      box-shadow: 0 15px 40px rgba(124,58,237,.13);
+    }
+
+    .number {
+      display: block;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(32px, 6vw, 58px);
+      line-height: 1.1;
+      font-weight: 600;
+      letter-spacing: -2px;
+      font-variant-numeric: tabular-nums;
+      color: #fff;
+      text-shadow: 0 0 24px rgba(196,181,253,.2);
+    }
+
+    .unit {
+      display: block;
+      margin-top: 12px;
+      color: #b8afd7;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .message-card {
+      max-width: 670px;
+      margin: 28px auto 0;
+      padding: 20px 22px;
+      border: 1px solid rgba(196,181,253,.15);
+      border-radius: 18px;
+      background: rgba(15,14,43,.48);
+      color: #d9d3ef;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .message-card strong { color: #f0abfc; }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 26px 0 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 48px;
+      padding: 0 21px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: transform .25s, box-shadow .25s, background .25s;
+    }
+
+    .btn:hover { transform: translateY(-3px); }
+
+    .btn-primary {
+      border: 1px solid rgba(255,255,255,.25);
+      color: #17102b;
+      background: linear-gradient(110deg, #c4b5fd, #f0abfc);
+      box-shadow: 0 6px 28px rgba(192,132,252,.2);
+    }
+
+    .btn-primary:hover { box-shadow: 0 8px 34px rgba(192,132,252,.35); }
+
+    .btn-secondary {
+      border: 1px solid var(--border);
+      color: #eee8ff;
+      background: rgba(255,255,255,.045);
+    }
+
+    .btn-secondary:hover { background: rgba(167,139,250,.12); }
+
+    .note {
+      margin: 20px 0 0;
+      color: #8f88b4;
+      font-size: 11px;
+      letter-spacing: .3px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 65px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(196,181,253,.12);
+      color: #8e87ae;
+      font-size: 11px;
+      letter-spacing: .4px;
+    }
+
+    .footer .spark { color: #e9a7ff; }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      display: none;
+      place-items: center;
+      padding: 22px;
+      background: rgba(4,4,17,.78);
+      backdrop-filter: blur(12px);
+    }
+
+    .modal.open { display: grid; animation: fadeIn .25s ease both; }
+
+    .modal-panel {
+      position: relative;
+      width: min(100%, 460px);
+      padding: 38px 25px;
+      border: 1px solid rgba(216,180,254,.32);
+      border-radius: 26px;
+      background: linear-gradient(145deg, #1c1741, #0d102a);
+      box-shadow: 0 0 90px rgba(139,92,246,.18);
+      text-align: center;
+      animation: popIn .45s cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 13px;
+      right: 15px;
+      width: 35px;
+      height: 35px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: white;
+      background: rgba(255,255,255,.05);
+      cursor: pointer;
+      font-size: 19px;
+    }
+
+    .modal-emoji { font-size: 54px; }
+
+    .modal h2 {
+      margin: 18px 0 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 30px;
+      letter-spacing: -1px;
+    }
+
+    .modal p { color: #c8c0e6; line-height: 1.8; font-size: 14px; }
+
+    .modal .btn { margin-top: 12px; }
+
+    .toast {
+      position: fixed;
+      z-index: 8;
+      bottom: 24px;
+      left: 50%;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 12px 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #20183e;
+      color: white;
+      font-size: 13px;
+      transition: opacity .25s, transform .25s;
+      text-align: center;
+      width: max-content;
+      max-width: calc(100% - 32px);
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    .confetti {
+      position: fixed;
+      z-index: 7;
+      top: -15px;
+      width: 7px;
+      height: 12px;
+      pointer-events: none;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(15px) scale(.94); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes pulse { 50% { opacity: .45; transform: scale(.8); } }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .55; transform: scale(.8); }
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes heartFloat {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-7px) rotate(5deg); }
+    }
+
+    @keyframes aurora {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(40px, 30px) scale(1.18); }
+    }
+
+    @keyframes fall {
+      to { transform: translate(var(--drift), 105vh) rotate(720deg); opacity: 0; }
+    }
+
+    @media (min-width: 700px) {
+      .page { padding-top: 34px; }
+      .countdown { gap: 18px; }
+      .time-card { padding: 31px 12px 24px; border-radius: 24px; }
+    }
+
+    @media (max-width: 440px) {
+      .page { width: min(100% - 24px, 960px); padding-top: 20px; }
+      .brand { font-size: 13px; gap: 7px; }
+      .brand-icon { width: 33px; height: 33px; }
+      .live-pill { font-size: 9px; padding: 8px 10px; letter-spacing: .7px; }
+      h1 { letter-spacing: -2.5px; }
+      .countdown { gap: 8px; }
+      .time-card { padding: 20px 4px 16px; border-radius: 15px; }
+      .number { font-size: clamp(28px, 8vw, 36px); letter-spacing: -1px; }
+      .unit { font-size: 9px; letter-spacing: 1px; margin-top: 9px; }
+      .message-card { padding: 17px 15px; }
+      .btn { padding: 0 15px; }
+      .footer { margin-top: 48px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<canvas id="stars" aria-hidden="true"></canvas>
-<main>
-  <div class="eyebrow">✦ A SPECIAL DAY IS APPROACHING ✦</div>
-  <div class="moon" aria-hidden="true">☾</div>
-  <h1 id="heading">My Birthday Is Coming</h1>
-  <p class="subtitle">One more year of growth, dreams and new beginnings.</p>
-  <div class="date">21 OCTOBER · EVERY YEAR</div>
+  <canvas id="starfield" aria-hidden="true"></canvas>
+  <div class="aurora one" aria-hidden="true"></div>
+  <div class="aurora two" aria-hidden="true"></div>
 
-  <section class="countdown" aria-label="Birthday countdown">
-    <div class="unit"><div class="number" id="days">--</div><div class="label">DAYS</div></div>
-    <div class="unit"><div class="number" id="hours">--</div><div class="label">HOURS</div></div>
-    <div class="unit"><div class="number" id="minutes">--</div><div class="label">MINUTES</div></div>
-    <div class="unit"><div class="number" id="seconds">--</div><div class="label">SECONDS</div></div>
-  </section>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <div class="brand-icon">✦</div>
+        <span>RAY'S UNIVERSE</span>
+      </div>
+      <div class="live-pill"><span class="live-dot"></span> COUNTDOWN ACTIVE</div>
+    </header>
 
-  <p class="message" id="message">The universe is getting ready for my day. ✨</p>
-  <button id="surprise">Reveal a little birthday magic ✨</button>
-  <p id="surpriseText" class="message" hidden></p>
-  <footer>MADE UNDER THE STARS · BIRTHDAY EDITION</footer>
-</main>
-<script>
-const $ = id => document.getElementById(id);
+    <main>
+      <section class="hero">
+        <div class="eyebrow"><span>✧</span> A SPECIAL DAY IS APPROACHING <span>✧</span></div>
 
-function updateCountdown(){
-  const now = new Date();
-  let year = now.getFullYear();
-  let target = new Date(year, 9, 21, 0, 0, 0);
+        <h1>
+          <span class="title-white">Ray's Birthday</span>
+          <span class="title-gradient">Countdown ✨</span>
+        </h1>
 
-  // If this year's birthday has passed, count toward next year.
-  if(now >= target) target = new Date(year + 1, 9, 21, 0, 0, 0);
+        <p class="subtitle">
+          One special day. A thousand reasons to smile.
+          The universe is getting ready for Ray's next trip around the sun.
+        </p>
 
-  const remaining = Math.max(0, target - now);
-  const total = Math.floor(remaining / 1000);
-  const days = Math.floor(total / 86400);
-  const hours = Math.floor(total % 86400 / 3600);
-  const minutes = Math.floor(total % 3600 / 60);
-  const seconds = total % 60;
+        <div class="birthday-date">SAVE THE DATE · <strong>OCTOBER 21</strong></div>
 
-  $("days").textContent = String(days).padStart(2,"0");
-  $("hours").textContent = String(hours).padStart(2,"0");
-  $("minutes").textContent = String(minutes).padStart(2,"0");
-  $("seconds").textContent = String(seconds).padStart(2,"0");
+        <div class="orbit" aria-hidden="true">
+          <div class="orbit-ring"></div>
+          <div class="orbit-ring inner"></div>
+          <div class="orbit-core">🎂</div>
+        </div>
 
-  if(now.getMonth() === 9 && now.getDate() === 21){
-    $("heading").textContent = "Happy Birthday To Me! 🎂";
-    $("message").textContent = "Today is my day. Let the celebration begin! ✨";
-  } else {
-    $("heading").textContent = "My Birthday Is Coming";
-    $("message").textContent = days <= 1
-      ? "Almost time for my special day. ✨"
-      : "The universe is getting ready for my day. ✨";
-  }
-}
-updateCountdown();
-setInterval(updateCountdown,1000);
+        <div class="section-label" id="countdown-label">THE BIG MOMENT ARRIVES IN</div>
+      </section>
 
-$("surprise").addEventListener("click",()=>{
-  const box = $("surpriseText");
-  box.hidden = false;
-  box.textContent = "🌌 I am growing, learning and becoming who I want to be. My next chapter starts now. Here's to another year of possibilities! 🎂💜";
-  $("surprise").textContent = "Birthday magic unlocked ✨";
-});
+      <section class="countdown" aria-label="Birthday countdown">
+        <div class="time-card">
+          <span class="number" id="days">000</span>
+          <span class="unit">Days</span>
+        </div>
+        <div class="time-card">
+          <span class="number" id="hours">00</span>
+          <span class="unit">Hours</span>
+        </div>
+        <div class="time-card">
+          <span class="number" id="minutes">00</span>
+          <span class="unit">Minutes</span>
+        </div>
+        <div class="time-card">
+          <span class="number" id="seconds">00</span>
+          <span class="unit">Seconds</span>
+        </div>
+      </section>
 
-// Lightweight animated starfield; no external libraries needed.
-const canvas = $("stars");
-const ctx = canvas.getContext("2d");
-let stars = [];
-let w = 0, h = 0;
+      <div class="message-card">
+        <strong>✨ A little reminder:</strong> every second brings us closer to another chapter,
+        new memories, bigger dreams, and more reasons to celebrate. Ray's day is on the way!
+      </div>
 
-function resize(){
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  w = window.innerWidth; h = window.innerHeight;
-  canvas.width = w * dpr; canvas.height = h * dpr;
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  stars = Array.from({length:Math.min(160,Math.floor(w*h/6500))},()=>({
-    x:Math.random()*w,y:Math.random()*h,
-    r:Math.random()*1.5+.3,p:Math.random()*Math.PI*2
-  }));
-}
-function draw(){
-  ctx.clearRect(0,0,w,h);
-  for(const s of stars){
-    s.p += .012;
-    ctx.globalAlpha = .35 + (Math.sin(s.p)+1)*.3;
-    ctx.fillStyle = "#dcd6ff";
-    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
-  }
-  ctx.globalAlpha = 1;
-  requestAnimationFrame(draw);
-}
-window.addEventListener("resize",resize);
-resize();draw();
-</script>
+      <div class="actions">
+        <button class="btn btn-primary" id="surprise-btn" type="button">
+          <span>🎁</span> Open Birthday Surprise
+        </button>
+        <button class="btn btn-secondary" id="share-btn" type="button">
+          <span>↗</span> Share with Besties
+        </button>
+      </div>
+
+      <p class="note">Made with ✦, dreams, and a little midnight magic.</p>
+    </main>
+
+    <footer class="footer">
+      <span>© <span id="year"></span> Ray's Birthday Countdown</span>
+      <span class="spark">✦</span>
+      <span>Made for the memories</span>
+    </footer>
+  </div>
+
+  <div class="modal" id="surprise-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-panel">
+      <button class="modal-close" id="close-modal" type="button" aria-label="Close surprise">×</button>
+      <div class="modal-emoji">🌌🎂</div>
+      <h2 id="modal-title">Ray's Day Is Coming!</h2>
+      <p>
+        Here's to another year of growth, laughter, unforgettable memories,
+        and dreams that get bigger every day. May this next chapter be your best one yet.
+      </p>
+      <p><strong>THE WORLD ISN'T READY. 💜</strong></p>
+      <button class="btn btn-primary" id="celebrate-btn" type="button">✨ Celebrate!</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Countdown to the next October 21 at midnight, using the visitor's local time.
+    const $ = (id) => document.getElementById(id);
+
+    function getNextBirthday() {
+      const now = new Date();
+      let target = new Date(now.getFullYear(), 9, 21, 0, 0, 0, 0);
+      if (now >= target) {
+        target = new Date(now.getFullYear() + 1, 9, 21, 0, 0, 0, 0);
+      }
+      return target;
+    }
+
+    let birthday = getNextBirthday();
+
+    function updateCountdown() {
+      const now = new Date();
+
+      if (now >= birthday) {
+        $("countdown-label").textContent = "IT'S RAY'S BIRTHDAY!";
+        $("days").textContent = "🎉";
+        $("hours").textContent = "🎂";
+        $("minutes").textContent = "💜";
+        $("seconds").textContent = "✨";
+        return;
+      }
+
+      const remaining = birthday.getTime() - now.getTime();
+      $("days").textContent = String(Math.floor(remaining / 86400000)).padStart(3, "0");
+      $("hours").textContent = String(Math.floor((remaining % 86400000) / 3600000)).padStart(2, "0");
+      $("minutes").textContent = String(Math.floor((remaining % 3600000) / 60000)).padStart(2, "0");
+      $("seconds").textContent = String(Math.floor((remaining % 60000) / 1000)).padStart(2, "0");
+    }
+
+    $("year").textContent = new Date().getFullYear();
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Animated starfield, with reduced work on smaller screens.
+    const canvas = $("starfield");
+    const ctx = canvas.getContext("2d");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let stars = [];
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+    function resizeStars() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const count = Math.min(150, Math.floor((width * height) / 8500));
+      stars = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 1.5 + .25,
+        alpha: Math.random() * .7 + .2,
+        speed: Math.random() * .012 + .003,
+        phase: Math.random() * Math.PI * 2
+      }));
+
+    }
+
+    function drawStars(time) {
+      ctx.clearRect(0, 0, width, height);
+
+      for (const star of stars) {
+        const glow = reduceMotion ? star.alpha :
+          star.alpha * (.65 + .35 * Math.sin(time * star.speed + star.phase));
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(225, 216, 255, ${glow})`;
+        ctx.shadowBlur = star.r > 1.15 ? 8 : 0;
+        ctx.shadowColor = "#c4b5fd";
+        ctx.fill();
+      }
+
+      ctx.shadowBlur = 0;
+      if (!reduceMotion) requestAnimationFrame(drawStars);
+    }
+
+    window.addEventListener("resize", resizeStars);
+    resizeStars();
+    if (!reduceMotion) requestAnimationFrame(drawStars);
+
+    // Surprise modal.
+    const modal = $("surprise-modal");
+
+    $("surprise-btn").addEventListener("click", () => {
+      modal.classList.add("open");
+    });
+
+    function closeModal() {
+      modal.classList.remove("open");
+    }
+
+    $("close-modal").addEventListener("click", closeModal);
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeModal();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeModal();
+    });
+
+    // Short celebration animation.
+    function celebrate() {
+      closeModal();
+      if (reduceMotion) {
+        showToast("Sending Ray birthday vibes! 💜");
+        return;
+      }
+
+      const pieces = ["#c4b5fd", "#f0abfc", "#93c5fd", "#ffffff", "#a7f3d0"];
+      for (let i = 0; i < 85; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti";
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.background = pieces[Math.floor(Math.random() * pieces.length)];
+        piece.style.borderRadius = Math.random() > .5 ? "50%" : "2px";
+        piece.style.setProperty("--drift", (Math.random() * 180 - 90) + "px");
+        piece.style.animationDuration = (2.2 + Math.random() * 2.2) + "s";
+        piece.style.animationDelay = Math.random() * .7 + "s";
+        document.body.appendChild(piece);
+        piece.addEventListener("animationend", () => piece.remove(), { once: true });
+      }
+
+      showToast("A little birthday magic for Ray! ✨");
+    }
+
+    $("celebrate-btn").addEventListener("click", celebrate);
+
+    // Share the live website with friends.
+    async function shareWebsite() {
+      const shareData = {
+        title: "Ray's Birthday Countdown ✨",
+        text: "Brooo 💜 Ray's birthday countdown is live! Come see the midnight magic. 🌌🎂",
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+        } catch (error) {
+          if (error.name !== "AbortError") showToast("Sharing wasn't available. Try copying the link.");
+        }
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        showToast("Link copied! Send it to your besties 💜");
+      } catch {
+        showToast("Copy the website link from your browser's address bar.");
+      }
+    }
+
+    $("share-btn").addEventListener("click", shareWebsite);
+
+    let toastTimeout;
+    function showToast(message) {
+      const toast = $("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+  </script>
 </body>
 </html>

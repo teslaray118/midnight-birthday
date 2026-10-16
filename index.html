@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080b20">
+<title>My Birthday Countdown ✨</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;overflow-x:hidden;
+  background:radial-gradient(ellipse at 50% 40%,#21154d 0%,#10132e 42%,#050714 100%);
+  color:#f7f3ff;font-family:system-ui,-apple-system,sans-serif;
+  display:grid;place-items:center;text-align:center;padding:25px;
+}
+#stars{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+main{position:relative;width:min(760px,100%);padding:30px 0}
+.eyebrow{color:#c4b5fd;letter-spacing:4px;font-size:12px;font-weight:700}
+h1{font-size:clamp(34px,7vw,68px);line-height:1.08;margin:22px 0 14px;
+background:linear-gradient(100deg,#fff,#c4b5fd,#a5b4fc);
+-webkit-background-clip:text;background-clip:text;color:transparent;
+text-shadow:0 0 35px #8b5cf644}
+.subtitle{color:#cbd0f8;line-height:1.7}
+.moon{font-size:64px;margin:22px 0;filter:drop-shadow(0 0 25px #a78bfa)}
+.countdown{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:32px 0}
+.unit{padding:20px 5px;background:#ffffff0b;border:1px solid #a78bfa55;
+border-radius:17px;box-shadow:0 0 25px #8b5cf414;backdrop-filter:blur(10px)}
+.number{font-size:clamp(27px,6vw,49px);font-weight:750;color:#e9d5ff;
+font-variant-numeric:tabular-nums}
+.label{font-size:10px;letter-spacing:2px;color:#b8b9e6;margin-top:7px}
+.date{color:#ddd6fe;font-weight:650;letter-spacing:2px}
+.message{margin:25px 0;color:#c4b5fd;line-height:1.8}
+button{background:linear-gradient(100deg,#7c3aed,#6366f1);color:white;
+border:0;border-radius:999px;padding:13px 23px;font-weight:650;
+cursor:pointer;box-shadow:0 0 25px #8b5cf444}
+button:focus-visible{outline:2px solid white;outline-offset:4px}
+footer{color:#888bb8;font-size:12px;margin-top:35px}
+@media(max-width:420px){.countdown{gap:7px}.unit{padding:15px 2px}.label{letter-spacing:1px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<canvas id="stars" aria-hidden="true"></canvas>
+<main>
+  <div class="eyebrow">✦ A SPECIAL DAY IS APPROACHING ✦</div>
+  <div class="moon" aria-hidden="true">☾</div>
+  <h1 id="heading">My Birthday Is Coming</h1>
+  <p class="subtitle">One more year of growth, dreams and new beginnings.</p>
+  <div class="date">21 OCTOBER · EVERY YEAR</div>
+
+  <section class="countdown" aria-label="Birthday countdown">
+    <div class="unit"><div class="number" id="days">--</div><div class="label">DAYS</div></div>
+    <div class="unit"><div class="number" id="hours">--</div><div class="label">HOURS</div></div>
+    <div class="unit"><div class="number" id="minutes">--</div><div class="label">MINUTES</div></div>
+    <div class="unit"><div class="number" id="seconds">--</div><div class="label">SECONDS</div></div>
+  </section>
+
+  <p class="message" id="message">The universe is getting ready for my day. ✨</p>
+  <button id="surprise">Reveal a little birthday magic ✨</button>
+  <p id="surpriseText" class="message" hidden></p>
+  <footer>MADE UNDER THE STARS · BIRTHDAY EDITION</footer>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+
+function updateCountdown(){
+  const now = new Date();
+  let year = now.getFullYear();
+  let target = new Date(year, 9, 21, 0, 0, 0);
+
+  // If this year's birthday has passed, count toward next year.
+  if(now >= target) target = new Date(year + 1, 9, 21, 0, 0, 0);
+
+  const remaining = Math.max(0, target - now);
+  const total = Math.floor(remaining / 1000);
+  const days = Math.floor(total / 86400);
+  const hours = Math.floor(total % 86400 / 3600);
+  const minutes = Math.floor(total % 3600 / 60);
+  const seconds = total % 60;
+
+  $("days").textContent = String(days).padStart(2,"0");
+  $("hours").textContent = String(hours).padStart(2,"0");
+  $("minutes").textContent = String(minutes).padStart(2,"0");
+  $("seconds").textContent = String(seconds).padStart(2,"0");
+
+  if(now.getMonth() === 9 && now.getDate() === 21){
+    $("heading").textContent = "Happy Birthday To Me! 🎂";
+    $("message").textContent = "Today is my day. Let the celebration begin! ✨";
+  } else {
+    $("heading").textContent = "My Birthday Is Coming";
+    $("message").textContent = days <= 1
+      ? "Almost time for my special day. ✨"
+      : "The universe is getting ready for my day. ✨";
+  }
+}
+updateCountdown();
+setInterval(updateCountdown,1000);
+
+$("surprise").addEventListener("click",()=>{
+  const box = $("surpriseText");
+  box.hidden = false;
+  box.textContent = "🌌 I am growing, learning and becoming who I want to be. My next chapter starts now. Here's to another year of possibilities! 🎂💜";
+  $("surprise").textContent = "Birthday magic unlocked ✨";
+});
+
+// Lightweight animated starfield; no external libraries needed.
+const canvas = $("stars");
+const ctx = canvas.getContext("2d");
+let stars = [];
+let w = 0, h = 0;
+
+function resize(){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  w = window.innerWidth; h = window.innerHeight;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  stars = Array.from({length:Math.min(160,Math.floor(w*h/6500))},()=>({
+    x:Math.random()*w,y:Math.random()*h,
+    r:Math.random()*1.5+.3,p:Math.random()*Math.PI*2
+  }));
+}
+function draw(){
+  ctx.clearRect(0,0,w,h);
+  for(const s of stars){
+    s.p += .012;
+    ctx.globalAlpha = .35 + (Math.sin(s.p)+1)*.3;
+    ctx.fillStyle = "#dcd6ff";
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(draw);
+}
+window.addEventListener("resize",resize);
+resize();draw();
+</script>
+</body>
+</html>
